@@ -1,0 +1,28 @@
+groups:
+  - name: threshold-alerts
+    rules:
+      - alert: metric_value_alert_simple
+        expr: metric_value < 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Simple threshold alert"
+          description: "The metric value is below 0"
+      - alert: simple_threshold_bands_alert
+        expr: metric_value < avg_over_time(metric_value[20s])-20 or metric_value > avg_over_time(metric_value[20s])+20
+        for: 1s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Simple threshold bands alert"
+          description: "The metric value deviates from the moving average"
+
+      - alert: boullinger_bands_alert
+        expr: metric_value < avg_over_time(metric_value[20s])-2*stddev_over_time(metric_value[20s]) or metric_value > avg_over_time(metric_value[20s])+2*stddev_over_time(metric_value[20s])
+        for: 1s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Boullinger bands alert"
+          description: "The metric value deviates from the moving average by more than 2 standard deviations"

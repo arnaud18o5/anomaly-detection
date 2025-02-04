@@ -1,0 +1,185 @@
+{
+    "id": 2,
+    "type": "timeseries",
+    "title": "Boullinger bands alerts",
+    "gridPos": {
+      "x": 0,
+      "y": 0,
+      "h": 8,
+      "w": 12
+    },
+    "fieldConfig": {
+      "defaults": {
+        "custom": {
+          "drawStyle": "line",
+          "lineInterpolation": "linear",
+          "barAlignment": 0,
+          "barWidthFactor": 0.6,
+          "lineWidth": 1,
+          "fillOpacity": 0,
+          "gradientMode": "none",
+          "spanNulls": false,
+          "insertNulls": false,
+          "showPoints": "auto",
+          "pointSize": 5,
+          "stacking": {
+            "mode": "none",
+            "group": "A"
+          },
+          "axisPlacement": "auto",
+          "axisLabel": "",
+          "axisColorMode": "text",
+          "axisBorderShow": false,
+          "scaleDistribution": {
+            "type": "linear"
+          },
+          "axisCenteredZero": false,
+          "hideFrom": {
+            "tooltip": false,
+            "viz": false,
+            "legend": false
+          },
+          "thresholdsStyle": {
+            "mode": "off"
+          }
+        },
+        "color": {
+          "mode": "palette-classic"
+        },
+        "mappings": [],
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {
+              "color": "green",
+              "value": null
+            },
+            {
+              "color": "red",
+              "value": 80
+            }
+          ]
+        }
+      },
+      "overrides": [
+        {
+          "matcher": {
+            "id": "byName",
+            "options": "Bande haute"
+          },
+          "properties": [
+            {
+              "id": "custom.lineStyle",
+              "value": {
+                "dash": [
+                  10,
+                  10
+                ],
+                "fill": "dash"
+              }
+            }
+          ]
+        },
+        {
+          "matcher": {
+            "id": "byName",
+            "options": "Bande basse"
+          },
+          "properties": [
+            {
+              "id": "custom.lineStyle",
+              "value": {
+                "dash": [
+                  10,
+                  10
+                ],
+                "fill": "dash"
+              }
+            }
+          ]
+        },
+        {
+          "matcher": {
+            "id": "byName",
+            "options": "Anomalie"
+          },
+          "properties": [
+            {
+              "id": "custom.drawStyle",
+              "value": "points"
+            },
+            {
+              "id": "custom.pointSize",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    "pluginVersion": "11.5.1",
+    "targets": [
+      {
+        "editorMode": "code",
+        "expr": "avg_over_time(metric_value[20s]) + 2 * stddev_over_time(metric_value[20s])",
+        "legendFormat": "Bande haute",
+        "range": true,
+        "refId": "A"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ceby9iaj1cx6od"
+        },
+        "editorMode": "code",
+        "expr": "metric_value",
+        "hide": false,
+        "instant": false,
+        "legendFormat": "Metric",
+        "range": true,
+        "refId": "B"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ceby9iaj1cx6od"
+        },
+        "editorMode": "code",
+        "expr": "avg_over_time(metric_value[20s]) - 2 * stddev_over_time(metric_value[20s])",
+        "hide": false,
+        "instant": false,
+        "legendFormat": "Bande basse",
+        "range": true,
+        "refId": "C"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ceby9iaj1cx6od"
+        },
+        "editorMode": "code",
+        "expr": "avg_over_time(metric_value[20s]) + 2 * stddev_over_time(metric_value[20s]) < metric_value or avg_over_time(metric_value[20s]) - 2 * stddev_over_time(metric_value[20s]) > metric_value",
+        "hide": false,
+        "instant": false,
+        "legendFormat": "Anomalie",
+        "range": true,
+        "refId": "D"
+      }
+    ],
+    "datasource": {
+      "type": "prometheus",
+      "uid": "ceby9iaj1cx6od"
+    },
+    "options": {
+      "tooltip": {
+        "mode": "single",
+        "sort": "none",
+        "hideZeros": false
+      },
+      "legend": {
+        "showLegend": true,
+        "displayMode": "list",
+        "placement": "bottom",
+        "calcs": []
+      }
+    }
+  }
