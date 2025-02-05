@@ -17,7 +17,7 @@ public class IsolationForest {
         Gson gson = new Gson();
         String json = gson.toJson(featureVector);
         System.out.println("Feature vector: " + json);
-        String[] command = {"python3", pythonScriptPath, json};
+        String[] command = {"/opt/venv/bin/python3", pythonScriptPath, json};
 
         List<List<Boolean>> resultList = new ArrayList<>();
         try{

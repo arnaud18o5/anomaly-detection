@@ -4,7 +4,7 @@ global:
 scrape_configs:
   - job_name: 'python-metrics-app'
     static_configs:
-      - targets: ['python-metrics-app:8000', 'host.docker.internal:1234']
+      - targets: ['python-metrics-app:8000', 'anomaly-exporter:1234']
 
 rule_files:
   - "alertmanager/simple-alert.yml"

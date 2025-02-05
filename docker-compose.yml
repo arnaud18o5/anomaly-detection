@@ -41,10 +41,12 @@ services:
       - "6627:6627"
 
   supervisor:
-    build: ./ml-anomaly-detection/
+    image: storm
+    command: storm supervisor
     volumes:
       - ./ml-anomaly-detection/target:/storm
       - ./ml-models:/storm/ml-models
+      - ./supervisor:/storm/supervisor
     environment:
       - NIMBUS_SEEDS=nimbus
     depends_on:
