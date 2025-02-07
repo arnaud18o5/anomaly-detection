@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import DBSCAN
 
-def detect_anomalies(data, eps=10, min_samples=2, window_size=10):
+def detect_anomalies(data, eps=2, min_samples=2, window_size=10):
     """
     Applique DBSCAN sur une série temporelle pour détecter les anomalies en analysant les variations successives.
     
@@ -33,14 +33,13 @@ def detect_anomalies(data, eps=10, min_samples=2, window_size=10):
 
     # 4️⃣ Application de DBSCAN
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
-    labels = dbscan.fit_predict(data.reshape(-1,1))
+    labels = dbscan.fit_predict(diffs_scaled)
 
 
 
     # 5️⃣ Extraction des indices des anomalies (labels = -1)
-    # anomalies = np.where((labels == -1) | (labels == 1))[0]
-    # anomalies = np.where(labels != 0)[0]
-    anomalies = np.where(labels == -1)[0]
+    anomalies = np.where((labels == -1) | (labels == 1))[0]
+    # anomalies = np.where(labels == 0)[0]
 
     anomalies = [[bool(i in anomalies)] for i in range(len(data))]
 
@@ -54,4 +53,4 @@ if __name__ == "__main__":
         print(result)
 
     except Exception as e:
-        print(json.dumps({"error dbscan": str(e)}))
+        print(json.dumps({"error": str(e)}))

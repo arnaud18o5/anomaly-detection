@@ -58,7 +58,7 @@ public class LevelShiftDetectionBolt extends BaseWindowedBolt {
     @Override
     public Map<String, Object> getComponentConfiguration() {
         Map<String, Object> conf = super.getComponentConfiguration();
-        conf.put(Config.TOPOLOGY_BOLTS_WINDOW_LENGTH_DURATION_MS, 29000); // Fenêtre de 60 secondes
+        conf.put(Config.TOPOLOGY_BOLTS_WINDOW_LENGTH_DURATION_MS, 60000); // Fenêtre de 60 secondes
         conf.put(Config.TOPOLOGY_BOLTS_SLIDING_INTERVAL_DURATION_MS, 1000); // Intervalle de glissement de 10 secondes
         return conf;
     }

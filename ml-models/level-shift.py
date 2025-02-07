@@ -8,7 +8,7 @@ from adtk.detector import LevelShiftAD
 
 try:
     # Charger le modèle Isolation Forest
-    model = LevelShiftAD(c=1.5, side="both" ,window = 1)
+    model = LevelShiftAD(c=1.5, side="both" ,window = 5)
     
     # Lire les données envoyées par les arguments du script
     feature_vector = json.loads(sys.argv[1])
@@ -24,11 +24,10 @@ try:
     prediction_list = prediction.values.tolist()
     
     # Forcer le premier élément à False si c'est NaN
-    if pd.isna(prediction_list[0]):
-        prediction_list[0] = [False]
+    prediction_list = [[False] if pd.isna(x) else x for x in prediction_list]
     
     print(json.dumps(prediction_list))
 
 except Exception as e:
     # En cas d'erreur, imprimer l'exception
-    print(json.dumps({"error": str(e)}), file=sys.stderr)
+    print(json.dumps({"error levelshift": str(e)}), file=sys.stderr)

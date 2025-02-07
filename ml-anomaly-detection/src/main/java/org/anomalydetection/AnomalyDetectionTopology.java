@@ -15,17 +15,17 @@ public class AnomalyDetectionTopology {
 //        builder.setSpout("metric-spout", new MetricSpout());
         builder.setSpout("metric-spout", new MetricPrometheusSpout());
         builder.setBolt("spike-detection-bolt", new SpikeDetectionBolt()
-                        .withWindow(Duration.seconds(29), Duration.seconds(1)))
+                        .withWindow(Duration.seconds(60), Duration.seconds(1)))
                 .shuffleGrouping("metric-spout");
-        builder.setBolt("levelshift-detection-bolt", new LevelShiftDetectionBolt()
-                        .withWindow(Duration.seconds(20), Duration.seconds(1)))
-                .shuffleGrouping("metric-spout");
-        builder.setBolt("dbscan-detection-bolt", new DBSCANBolt()
-                        .withWindow(Duration.seconds(20), Duration.seconds(1)))
-                .shuffleGrouping("metric-spout");
+       builder.setBolt("levelshift-detection-bolt", new LevelShiftDetectionBolt()
+                       .withWindow(Duration.seconds(60), Duration.seconds(1)))
+               .shuffleGrouping("metric-spout");
+       builder.setBolt("dbscan-detection-bolt", new DBSCANBolt()
+                       .withWindow(Duration.seconds(60), Duration.seconds(1)))
+               .shuffleGrouping("metric-spout");
         builder.setBolt("prometheus-alert-bolt", new PrometheusAlertBolt("http://anomaly-exporter:12345/update-metric"))
-                .shuffleGrouping("levelshift-detection-bolt")
                 .shuffleGrouping("spike-detection-bolt")
+                .shuffleGrouping("levelshift-detection-bolt")
                 .shuffleGrouping("dbscan-detection-bolt");
         // Create a configuration
         Config conf = new Config();
@@ -34,7 +34,8 @@ public class AnomalyDetectionTopology {
         // Create a local cluster
 //        LocalCluster cluster = new LocalCluster();
 
-        conf.setNumWorkers(1);
+        conf.setNumWorkers(2);
+        conf.setMessageTimeoutSecs(90);
         // Submit the topology
         // cluster.submitTopology("anomaly-detection-topology", conf, builder.createTopology());
 
@@ -42,9 +43,9 @@ public class AnomalyDetectionTopology {
         StormSubmitter.submitTopology("anomaly-detection-topology", conf, builder.createTopology());
 
         // Keep the cluster running for a specified time (e.g., 60 seconds)
-//        while (true) {
-//            Thread.sleep(60000); // Petite pause pour éviter d'utiliser trop de CPU
-//        }
+       while (true) {
+           Thread.sleep(10000); // Petite pause pour éviter d'utiliser trop de CPU
+       }
 
         // Shutdown the cluster
 //        cluster.shutdown();
