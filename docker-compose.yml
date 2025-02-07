@@ -24,5 +24,53 @@ services:
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/var/lib/grafana/dashboards
 
+
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+
+  nimbus:
+    image: storm
+    command: storm nimbus
+    environment:
+      - NIMBUS_SEEDS=nimbus
+    depends_on:
+      - zookeeper
+    ports:
+      - "6627:6627"
+
+  supervisor:
+    image: storm
+    command: storm supervisor
+    volumes:
+      - ./ml-anomaly-detection/target:/storm
+      - ./ml-models:/storm/ml-models
+      - ./supervisor:/storm/supervisor
+    environment:
+      - NIMBUS_SEEDS=nimbus
+    depends_on:
+      - nimbus
+      - zookeeper
+
+  ui:
+    image: storm
+    command: storm ui
+    environment:
+      - NIMBUS_SEEDS=nimbus
+    depends_on:
+      - nimbus
+      - zookeeper
+    ports:
+      - "8080:8080"
+
+  anomaly-exporter:
+    build: ./anomaly-exporter/
+    ports:
+      - "12345:12345"
+      - "1234:1234"
+    depends_on:
+      - python-metrics-app
+
 volumes:
   grafana-storage:
