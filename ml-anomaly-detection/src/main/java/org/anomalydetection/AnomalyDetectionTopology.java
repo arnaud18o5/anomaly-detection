@@ -15,17 +15,13 @@ public class AnomalyDetectionTopology {
 //        builder.setSpout("metric-spout", new MetricSpout());
         builder.setSpout("metric-spout", new MetricPrometheusSpout());
         builder.setBolt("spike-detection-bolt", new SpikeDetectionBolt()
-                        .withWindow(Duration.seconds(60), Duration.seconds(1)))
+                        .withWindow(Duration.seconds(30), Duration.seconds(30)))
                 .shuffleGrouping("metric-spout");
-       builder.setBolt("levelshift-detection-bolt", new LevelShiftDetectionBolt()
-                       .withWindow(Duration.seconds(60), Duration.seconds(1)))
-               .shuffleGrouping("metric-spout");
        builder.setBolt("dbscan-detection-bolt", new DBSCANBolt()
-                       .withWindow(Duration.seconds(60), Duration.seconds(1)))
+                       .withWindow(Duration.seconds(30), Duration.seconds(30)))
                .shuffleGrouping("metric-spout");
         builder.setBolt("prometheus-alert-bolt", new PrometheusAlertBolt("http://anomaly-exporter:12345/update-metric"))
                 .shuffleGrouping("spike-detection-bolt")
-                .shuffleGrouping("levelshift-detection-bolt")
                 .shuffleGrouping("dbscan-detection-bolt");
         // Create a configuration
         Config conf = new Config();

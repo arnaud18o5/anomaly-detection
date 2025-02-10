@@ -58,7 +58,7 @@ public class MetricPrometheusSpout extends BaseRichSpout {
     public void nextTuple() {
         double metricValue = fetchMetricFromApp();
         System.out.println("Emitting metric value: " + metricValue);
-        String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+        double timestamp = System.currentTimeMillis() / 1000;
         collector.emit(new Values(timestamp, metricValue));
         try {
             Thread.sleep(1000);

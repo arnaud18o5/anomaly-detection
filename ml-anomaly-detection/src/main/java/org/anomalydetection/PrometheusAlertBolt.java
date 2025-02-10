@@ -33,7 +33,7 @@ public class PrometheusAlertBolt extends BaseRichBolt {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
             System.out.println("Sending alert to Prometheus: " + input);
-            String jsonPayload = "{\"metric_value\": " + input.getDoubleByField("metricValue") + ", \"type\":\"" + input.getStringByField("type")+"\"}";
+            String jsonPayload = "{\"metric_value\": " + input.getDoubleByField("metricValue") + ", \"type\":\"" + input.getStringByField("type")+"\", \"timestamp\": " + input.getDoubleByField("timestamp") + "}";
             System.out.println("Sending alert to Prometheus: " + jsonPayload);
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] inputBytes = jsonPayload.getBytes("utf-8");
@@ -41,12 +41,16 @@ public class PrometheusAlertBolt extends BaseRichBolt {
             }
 
             int responseCode = conn.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
             if (responseCode == 200) {
                 collector.ack(input);
             } else {
+                System.err.println("Failed to send alert. Response Code: " + responseCode);
                 collector.fail(input);
             }
         } catch (Exception e) {
+            System.err.println("Exception while sending alert: " + e.getMessage());
+            e.printStackTrace();
             collector.fail(input);
         }
     }

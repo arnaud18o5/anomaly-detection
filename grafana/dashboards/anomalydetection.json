@@ -1,0 +1,1038 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "decnzeb583g1sd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 22,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "metric_value{instance=\"python-metrics-app:8000\"}",
+          "hide": false,
+          "legendFormat": "Metric",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Metric",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "decnzeb583g1sd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 23,
+        "w": 23,
+        "x": 0,
+        "y": 10
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "changes(anomaly_counter_total[$__range])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Total anomalies",
+          "range": true,
+          "refId": "Total anomalies"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "changes(anomaly_counter{type=\"DBSCAN\"}[$__range])\n",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "DBSCAN",
+          "range": true,
+          "refId": "DBScan"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "changes(anomaly_counter{type=\"spike\"}[$__range])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "PersistAD",
+          "range": true,
+          "refId": "PersistAD"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "sum(sum((metric_value < bool avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 100 + metric_value{instance=\"python-metrics-app:8000\"} > bool avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 100)))",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "(metric_value < bool avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 100 + metric_value{instance=\"python-metrics-app:8000\"} > bool avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 100)",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "metric_value < avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 50 or metric_value{instance=\"python-metrics-app:8000\"} > avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 50",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "G"
+        },
+        {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0,
+                  0
+                ],
+                "type": "outside_range"
+              },
+              "query": {
+                "params": []
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "G",
+          "hide": true,
+          "refId": "F",
+          "type": "threshold"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "downsampler": "sum",
+          "expression": "F",
+          "hide": false,
+          "refId": "Moving average",
+          "type": "resample",
+          "upsampler": "fillna",
+          "window": "30m"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 3 * stddev_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) < metric_value{instance=\"python-metrics-app:8000\"} or avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 3 * stddev_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) > metric_value{instance=\"python-metrics-app:8000\"}",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "I"
+        },
+        {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [
+                  0.1,
+                  -0.1
+                ],
+                "type": "outside_range"
+              },
+              "query": {
+                "params": []
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "downsampler": "mean",
+          "expression": "I",
+          "hide": true,
+          "refId": "J",
+          "type": "threshold",
+          "upsampler": "fillna"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "downsampler": "sum",
+          "expression": "J",
+          "hide": false,
+          "refId": "Boullinger bands",
+          "type": "resample",
+          "upsampler": "fillna",
+          "window": "30m"
+        }
+      ],
+      "title": "How many anomalies have been detected by each method",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "decnzeb583g1sd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Anomalies"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 22,
+        "x": 0,
+        "y": 33
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "metric_value{instance=\"python-metrics-app:8000\"}",
+          "legendFormat": "Metric",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "(anomaly{type=\"spike\"} * ((anomaly{type=\"spike\"} - anomaly{type=\"spike\"} offset 1s) != bool 0) != 0) ",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Anomalies",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "PersistAD",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "decnzeb583g1sd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Anomalies"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 22,
+        "x": 0,
+        "y": 49
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "metric_value{instance=\"python-metrics-app:8000\"}",
+          "hide": false,
+          "legendFormat": "Metric",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "(anomaly{type=\"DBSCAN\"} * ((anomaly{type=\"DBSCAN\"} - anomaly{type=\"DBSCAN\"} offset 1s) != bool 0) != 0) ",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Anomalies",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "DBSCAN",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "decnzeb583g1sd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lower band"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Upper band"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Anomalies"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 23,
+        "x": 0,
+        "y": 69
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "metric_value{instance=\"python-metrics-app:8000\"}",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Metric",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 3 * stddev_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) < metric_value{instance=\"python-metrics-app:8000\"} or avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 3 * stddev_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) > metric_value{instance=\"python-metrics-app:8000\"}",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Anomalies",
+          "range": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 3 * stddev_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s])",
+          "legendFormat": "Upper band",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "expr": "avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 3 * stddev_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s])",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Lower band",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Boullinger bands alerts",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "decnzeb583g1sd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lower average"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Upper average"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Anomalies"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 11
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 23,
+        "x": 0,
+        "y": 82
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "metric_value{instance=\"python-metrics-app:8000\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Metric",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "metric_value < avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 70 or metric_value{instance=\"python-metrics-app:8000\"} > avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) + 70",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Anomalies",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s]) - 50",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Lower average",
+          "range": true,
+          "refId": "test",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "feccvy2pto1s0b"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "avg_over_time(metric_value{instance=\"python-metrics-app:8000\"}[20s])+50",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Upper average",
+          "range": true,
+          "refId": "C",
+          "useBackend": false
+        }
+      ],
+      "title": "Moving average",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Anomaly Detetion",
+  "uid": "debyghgj9z6dcb",
+  "version": 8,
+  "weekStart": ""
+}
