@@ -1,38 +1,61 @@
-from flask import Flask, request, jsonify
-from prometheus_client import start_http_server, Gauge
+from flask import Flask, request, jsonify, Response
 import time
 import threading
+from collections import deque, defaultdict
 
 # Créer l'application Flask
 app = Flask(__name__)
 
-# Déclaration de la métrique
-metric_gauge = Gauge('metric_value', 'Valeur de la métrique du container', ['type'])
+# Stockage des métriques avec leur timestamp, limité à 30 éléments
+metrics_data = deque(maxlen=30)
 
+anomaly_counters = defaultdict(int)
 
-# Route pour recevoir les données POST et mettre à jour la métrique
+# Route pour recevoir les données POST et stocker la métrique avec timestamp
 @app.route('/update-metric', methods=['POST'])
 def update_metric():
     try:
-        # Récupérer les données de la requête
         data = request.json
-        type = data.get('type')
+        metric_type = data.get('type')
         metric_value = data.get('metric_value')
+        timestamp = int(data.get('timestamp', time.time())) *1000
+
         print(f"Received data: {data}")
 
-        # Mettre à jour la métrique
-        if type and metric_value is not None:
-            metric_gauge.labels(type=type).set(metric_value)
+        if metric_type and metric_value is not None:
+            # Ajouter la nouvelle métrique à la deque
+            # Vérifier si la métrique existe déjà
+            for m_type, m_value, m_timestamp in metrics_data:
+                if m_type == metric_type and m_timestamp == timestamp:
+                    return jsonify({"status": "error", "message": "Duplicate metric"}), 400
+            
+            anomaly_counters[metric_type] += 1
+            # Ajouter la nouvelle métrique à la deque
+            metrics_data.append((metric_type, metric_value, timestamp))
             return jsonify({"status": "success", "message": "Metric updated"}), 200
         else:
             return jsonify({"status": "error", "message": "Missing parameters"}), 400
     except Exception as e:
         print(str(e))
         return jsonify({"status": "error", "message": str(e)}), 500
-    
 
-# Démarrer le serveur HTTP pour exposer les métriques à Prometheus
+# Route pour exposer les métriques dans un format compatible Prometheus
+@app.route('/metrics')
+def metrics():
+    response = "# HELP metric_value Valeur de la métrique du container avec timestamp\n"
+    response += "# TYPE metric_value gauge\n"
+
+    for metric_type, metric_value, timestamp in metrics_data:
+        response += f'anomaly{{type="{metric_type}"}} {metric_value} {timestamp}\n'
+
+    response += "# HELP anomaly_counter Nombre d'anomalies détectées par type\n"
+    response += "# TYPE anomaly_counter counter\n"
+
+    for metric_type, count in anomaly_counters.items():
+        response += f'anomaly_counter{{type="{metric_type}"}} {count}\n'
+
+    return Response(response, mimetype="text/plain")
+
+# Démarrer le serveur Flask
 if __name__ == '__main__':
-    expiration_time = 10  # Durée d'expiration des métriques en secondes
-    start_http_server(1234)  # Prometheus scrutera ce port
-    app.run(host='0.0.0.0', port=12345)  # Serveur Flask sur le port 5000
+    app.run(host='0.0.0.0', port=12345)  # Serveur Flask sur le port 12345

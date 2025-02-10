@@ -27,38 +27,35 @@ public class DBSCANBolt extends BaseWindowedBolt {
     @Override
     public void execute(TupleWindow inputWindow) {
         double[] values = new double[inputWindow.get().size()];
+        double[] timestamps = new double[inputWindow.get().size()];
         int index = 0;
         for (Tuple input : inputWindow.get()) {
             double metricValue = input.getDoubleByField("metricValue");
+            double timestamp = input.getDoubleByField("timestamp");
+            timestamps[index] = timestamp;
             values[index++] = metricValue;
         }
         try {
             List<List<Boolean>> anomalies = model.predict(values);
-//            for (int i = 0; i < anomalies.size(); i++) {             // Emit an alert if an anomaly is detected
-//                if (anomalies.get(i).get(0).equals(true)) {
-//                    double metricValue = values[i];
-//                    emitAlert(metricValue);
-//                }
-//            }
-            if(anomalies.size() == 0)
-                return;
-            if(anomalies.get(anomalies.size()-1).get(0).equals(true)) {
-                System.out.println("Anomaly detected");
-                double metricValue = values[values.length-1];
-                emitAlert(metricValue);
+            for (int i = 0; i < anomalies.size(); i++) {         
+                if (anomalies.get(i).get(0).equals(true)) {
+                    double metricValue = values[i];
+                    double timestamp = timestamps[i];
+                    emitAlert(metricValue, timestamp);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void emitAlert(double metricValue) {
-        this.collector.emit(new Values("DBSCAN", metricValue));
+    private void emitAlert(double metricValue, double timestamp) {
+        this.collector.emit(new Values("DBSCAN", metricValue, timestamp));
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("type", "metricValue"));
+        outputFieldsDeclarer.declare(new Fields("type", "metricValue", "timestamp"));
     }
 
     @Override
